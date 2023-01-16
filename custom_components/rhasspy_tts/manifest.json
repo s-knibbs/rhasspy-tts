@@ -1,0 +1,11 @@
+{
+    "domain": "rhasspy_tts",
+    "name": "Rhasspy TTS",
+    "documentation": "https://github.com/s-knibbs/rhasspy-tts",
+    "issue_tracker": "https://github.com/s-knibbs/rhasspy-tts/issues",
+    "requirements": ["rhasspy-client==1.1.1"],
+    "dependencies": [],
+    "codeowners": ["@s-knibbs"],
+    "version": "0.1.0",
+    "iot_class": "local_push"
+}
