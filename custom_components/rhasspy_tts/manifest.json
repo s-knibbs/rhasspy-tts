@@ -3,9 +3,9 @@
     "name": "Rhasspy TTS",
     "documentation": "https://github.com/s-knibbs/rhasspy-tts",
     "issue_tracker": "https://github.com/s-knibbs/rhasspy-tts/issues",
-    "requirements": ["rhasspy-client==1.1.1"],
+    "requirements": [],
     "dependencies": [],
     "codeowners": ["@s-knibbs"],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "iot_class": "local_push"
 }

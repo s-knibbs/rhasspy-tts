@@ -2,11 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from rhasspyclient import RhasspyClient
 import voluptuous as vol
-
-
-from homeassistant.components.tts import CONF_LANG, PLATFORM_SCHEMA, Provider
+from homeassistant.components.tts import PLATFORM_SCHEMA, Provider
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SSL
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession 
@@ -31,17 +28,16 @@ async def async_get_engine(hass: HomeAssistant, conf: dict, discovery_info=None)
     port = conf.get(CONF_PORT)
     host = conf.get(CONF_HOST)
     proto = "https" if conf.get(CONF_SSL) else "http"
-    client = RhasspyClient(f"{proto}://{host}:{port}/api", async_get_clientsession(hass))
-    return RhasspyTTSProvider(hass, client)
+    return RhasspyTTSProvider(hass, f"{proto}://{host}:{port}/api/text-to-speech?play=false")
 
 
 class RhasspyTTSProvider(Provider):
 
-    def __init__(self, hass: HomeAssistant, rhasspy: RhasspyClient) -> None:
-        self.hass = hass
-        self._rhasspy = rhasspy
-        self._rhasspy.tts_url = self._rhasspy.tts_url + "?play=false"
+    def __init__(self, hass: HomeAssistant, tts_url: str) -> None:
+        self.tts_url = tts_url
         self.name = "RhasspyTTS"
+        self.session = async_get_clientsession(hass)
+
 
     @property
     def default_language(self) -> str | None:
@@ -60,5 +56,6 @@ class RhasspyTTSProvider(Provider):
         return {}
 
     async def async_get_tts_audio(self, message: str, language: str, options: dict[str, Any] | None = None) -> TtsAudioType:
-        data = await self._rhasspy.text_to_speech(message)
-        return "wav", data
+        async with self.session.post(self.tts_url, data=message) as response:
+            response.raise_for_status()
+            return "wav", await response.read()
