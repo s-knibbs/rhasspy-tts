@@ -5,13 +5,6 @@ TTS platform to enable home assistant to use the [rhasspy](https://rhasspy.readt
 
 Install via HACS or copy `./custom_components/rhasspy_tts/` to `/config/custom_components/`
 
-**Note**: There is currently an issue with the installation of `rhasspy-client` due to dependency conflicts. It can be installed manually
-within the homeassistant container using:
-
-```
-# pip install --no-deps rhasspy-client==1.1.1
-```
-
 ## Configuration Variables
 
 |  key    | required | value             | description |
